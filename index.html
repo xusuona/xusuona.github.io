@@ -215,6 +215,648 @@
   
   
   <div class="post-block home">
+    <link itemprop="mainEntityOfPage" href="https://xusuona.github.ioxusuona.github.io/2019/10/20/java并发编程/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="许唢呐">
+      <meta itemprop="description" content="保持理智，认真生活！">
+      <meta itemprop="image" content="xusuona.github.io/images/1.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="许唢呐的个人江湖">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+            
+            <a href="xusuona.github.io/2019/10/20/java并发编程/" class="post-title-link" itemprop="url">未命名</a>
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2019-10-20 17:12:35" itemprop="dateCreated datePublished" datetime="2019-10-20T17:12:35+08:00">2019-10-20</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-11-01 15:57:46" itemprop="dateModified" datetime="2019-11-01T15:57:46+08:00">2019-11-01</time>
+              </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>##一、并发与高并发概念<br>###1. 并发<br>并发指同时拥有两个或多个线程。单核处理器时，多个线程将交替换入换出内存；多核处理器时，线程将被分配至不同处理器上。<br>###2. 高并发<br>高并发是互联网分布式系统架构中必须考虑的因素，通常指系统能够同时并行处理请求。</p>
+<p>##二、CPU多级缓存<br>###1. 缓存一致性（MESI）<br>其中，M表示修改状态，E表示独享，S表示共享，I表示无效。</p>
+<p>缓存一致性协议的其中一个表现为，当CPU向内存写入数据时，如果发现操作的变量是共享变量，即在其他CPU中也存在该变量的副本，会发出信号通知其他CPU将该变量的缓存置为无效状态，因此当其他CPU需要读取这个变量时，发现自己缓存中缓存行是无效的，那么它就会从内存重新读取。java中的volatile就是该协议的实现，volatile的实现原理可参见volatile底层实现。</p>
+<p>##三、Java内存模型</p>
+<p>###1. JVM与JMM的区别</p>
+<p>###2. JMM八种原子操作</p>
+<ol>
+<li>lock(锁定)：作用于主内存的变量，把一个变量标记为一条线程独占状态</li>
+<li>unlock(解锁)：作用于主内存的变量，把一个处于锁定状态的变量释放出来，释放后的变量才可以被其他线程锁定</li>
+<li>read(读取)：作用于主内存的变量，把一个变量值从主内存传输到线程的工作内存中，以便随后的load动作使用</li>
+<li>load(载入)：作用于工作内存的变量，它把read操作从主内存中得到的变量值放入工作内存的变量副本中</li>
+<li>use(使用)：作用于工作内存的变量，把工作内存中的一个变量值传递给执行引擎</li>
+<li>assign(赋值)：作用于工作内存的变量，它把一个从执行引擎接收到的值赋给工作内存的变量</li>
+<li>store(存储)：作用于工作内存的变量，把工作内存中的一个变量的值传送到主内存中，以便随后的write的操作</li>
+<li>write(写入)：作用于工作内存的变量，它把store操作从工作内存中的一个变量的值传送到主内存的变量中</li>
+</ol>
+<p>###3. JMM同步规则</p>
+<ol>
+<li>不允许一个线程无原因地（没有发生过任何assign操作）把数据从工作内存同步会主内存中</li>
+<li>一个新的变量只能在主内存中诞生，不允许在工作内存中直接使用一个未被初始化（load或者assign）的变量。即就是对一个变量实施use和store操作之前，必须先自行assign和load操作。</li>
+<li><strong>一个变量在同一时刻只允许一条线程对其进行lock操作，但lock操作可以被同一线程重复执行多次，多次执行lock后，只有执行相同次数的unlock操作，变量才会被解锁。lock和unlock必须成对出现。</strong></li>
+<li><strong>如果对一个变量执行lock操作，将会清空工作内存中此变量的值，在执行引擎使用这个变量之前需要重新执行load或assign操作初始化变量的值。</strong></li>
+<li>如果一个变量事先没有被lock操作锁定，则不允许对它执行unlock操作；也不允许去unlock一个被其他线程锁定的变量。</li>
+<li>对一个变量执行unlock操作之前，必须先把此变量同步到主内存中（执行store和write操作）</li>
+</ol>
+<p>##四、线程安全<br>###1. 定义<br>线程安全指当多个线程访问某个类时，不管运行时环境采用何种调度方式或者这些进程将如何交替执行，并且在主调代码中不需要任何额外的 同步或者协同，这个类都能表现出正确的行为，那么称这个类是线程安全的。</p>
+<p>###2. 特性</p>
+<ul>
+<li>原子性： </li>
+<li>安全性：</li>
+<li>有序性：happens-before原则</li>
+</ul>
+<p>##五、J.U.C<br>###1. CAS<br>CAS是compare and swap的缩写，意为比较并交换。<br>CAS算法是通过调用JNI（Java本地调用，可运行其他语言）实现的，使得Java能够越过JVM直接调用硬件并发操作的原语。由于在硬件上直接进行原子性操作的效率远远高于加同步锁，因此J.U.C整个包是建立在CAS理论上的。</p>
+<p>CAS 操作包含三个操作数 —— 内存位置（V）、预期原值（A）和新值(B)。如果内存位置的值与预期原值相匹配，那么处理器会自动将该位置值更新为新值。否则，处理器不做任何操作。</p>
+<p>通俗一点来说，就是当线程使用CAS操作变量时，会先确定当前变量的值（V），同时进行一个备份，备份的值称为预期值（A），接着便对变量进行操作，当操作完成需要更新变量新值（N）时，CAS操作会先判断变量当前值是否与备份值相同，若相同，则代表变量在线程操作这段期间没有被其他线程修改，若不相同，则代表已被修改。</p>
+<p>以AtomicInter类下的unsafe.compareAndSwapInt方法为例：</p>
+<pre><code>例子</code></pre><p>此时，线程不会被挂起，而是会再次发起尝试，直至线程的值与预期相同为止。若是竞争激烈的情况下，线程将陷入等待。</p>
+<p><strong>CAS的ABA问题</strong></p>
+<p>以上的情况满足大部分的场景需求，但有没有可能在线程操作变量的过程中，该变量由本来的A状态变为了B状态，而后又被改为了A状态呢？答案毋庸置疑。</p>
+<p>CAS的解决方法是每次修改都为加一个版本号，即使变量值相同，但是版本号不同也需要重新发起尝试。</p>
+<p>###2. Atomic包<br>####（1）AtomicXXX类</p>
+<ul>
+<li>AtomicLong</li>
+<li>AtomicReference</li>
+<li>AtomicReferenceFiledUpdate</li>
+<li>AtomicStampReference</li>
+<li>…..</li>
+</ul>
+<p>创建该包内对象类（如：AtomicInteger）后，当调用类中方法（例：incrementAndGet）时，是拿当前对象（工作内存）的值与底层(主内存)返回的值做对比，如果值一样才返回相加的结果。</p>
+<p>其中AtomicStampedReference用于解决ABA问题，AtomicStampedReference便是引入了版本号的AtomicReference。</p>
+<p>AtomicLong类与JDK1.8中的LongAdder类相似，各有优缺点。</p>
+<p>###3. 锁<br>####（1）synchronized<br>synchronized修饰代码块或是方法时，只对当前引用代码和方法的对象有效，而不干扰其他对象。</p>
+<p>修饰代码块如下：</p>
+<pre><code>sychronized{
+    for(int i = 0; i &lt;= 10; i++)
+    {
+        System.out.println(&quot;i&quot;);
+    }
+}</code></pre><p>修饰方法如下：</p>
+<pre><code>public sychronized void test(){}</code></pre><p>synchronized的底层实现:</p>
+<p>每一个Java对象都关联一个监视器对象Monitor，Monitor存在于Java对象的对象头Mark Word中，在《深入理解Java虚拟机》一书中，对Mark Word的解释如下：</p>
+<blockquote>
+<p>HotSpot虚拟机的对象头包括两部分信息，第一部分用于存储对象自身的运行时数据，如哈希码（HashCode）、GC分代年龄、锁状态标志、线程持有的锁、偏向线程ID、偏向时间戳等，这部分数据的长度在32位和64位的虚拟机（未开启压缩指针）中分别为32bit和64bit，官方称为“Mark Word”。</p>
+</blockquote>
+<p>####（2）volatile<br>volatile用于线程间共享变量。当变量被volatile声明时，代表当它被一个线程修改，便可被其他线程所监听到。同时，其他线程会将自己工作缓存中该变量的值设为无效，等到要使用该变量时，再从主内存中读取最新的变量值。</p>
+<p>volatile的底层实现原理用到了汇编指令中的lock前缀指令，当程序编译后，被volatile修饰的变量前将增加一条lock指令，而lock指令执行相当于一个内存屏障，用于实现对内存操作的顺序限制。</p>
+<p>volatile使用的lock是处理器实现的汇编指令，比起synchronize依赖于软件层次的JVM来说代价更小</p>
+
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+          <div class="post-eof"></div>
+        
+      </footer>
+  </div>
+  
+  
+  
+  </article>
+
+    
+        <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block home">
+    <link itemprop="mainEntityOfPage" href="https://xusuona.github.ioxusuona.github.io/2019/10/10/初步了解jvm/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="许唢呐">
+      <meta itemprop="description" content="保持理智，认真生活！">
+      <meta itemprop="image" content="xusuona.github.io/images/1.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="许唢呐的个人江湖">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+            
+            <a href="xusuona.github.io/2019/10/10/初步了解jvm/" class="post-title-link" itemprop="url">未命名</a>
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2019-10-10 20:38:18" itemprop="dateCreated datePublished" datetime="2019-10-10T20:38:18+08:00">2019-10-10</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-10-16 16:11:16" itemprop="dateModified" datetime="2019-10-16T16:11:16+08:00">2019-10-16</time>
+              </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <blockquote>
+<p>最近开始阅读《深入理解Java虚拟机》这本经典，也算是正式开启了我的jvm之旅。但是在读的过程中，我发觉自己的阅读效率并不是很高，有许多诸如“java堆”、“native堆”之类的名词总是印象不深，在后面翻阅时常常需要往前面查找相关的知识点。因此，我决定持续更新这篇博客，既为了增加阅读这本书过程中的名词积累，也为了在以后阅读中能够快速而准确地了解到相关解释。</p>
+</blockquote>
+<p>##1. Java堆</p>
+<p>Java堆（Java Heap）是Java虚拟机所管理的<strong>内存</strong>中最大的一块。它在虚拟机启动时即被创建，被所有线程共享。</p>
+<p>该内存区域存在的目的是存放对象实例，即为几乎所有的对象实例分配内存空间。因此，Java堆也是<strong>垃圾收集器</strong>（回收内存）管理的主要区域。</p>
+
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+          <div class="post-eof"></div>
+        
+      </footer>
+  </div>
+  
+  
+  
+  </article>
+
+    
+        <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block home">
+    <link itemprop="mainEntityOfPage" href="https://xusuona.github.ioxusuona.github.io/2019/10/09/SpringBoot学习笔记/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="许唢呐">
+      <meta itemprop="description" content="保持理智，认真生活！">
+      <meta itemprop="image" content="xusuona.github.io/images/1.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="许唢呐的个人江湖">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+            
+            <a href="xusuona.github.io/2019/10/09/SpringBoot学习笔记/" class="post-title-link" itemprop="url">未命名</a>
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2019-10-09 15:09:11" itemprop="dateCreated datePublished" datetime="2019-10-09T15:09:11+08:00">2019-10-09</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-10-10 20:36:29" itemprop="dateModified" datetime="2019-10-10T20:36:29+08:00">2019-10-10</time>
+              </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>1.使用maven创建SpringBoot项目</p>
+<p>SpringBoot目录结构</p>
+<p>大体和maven中目录相同，只不过在resource文件夹下多了三个文件夹，分别是</p>
+<p>静态资源目录 /static</p>
+<p>层页面目录 /templates</p>
+<p>SpringBoot配置文件 /application.properties</p>
+
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+          <div class="post-eof"></div>
+        
+      </footer>
+  </div>
+  
+  
+  
+  </article>
+
+    
+        <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block home">
+    <link itemprop="mainEntityOfPage" href="https://xusuona.github.ioxusuona.github.io/2019/10/09/git常用命令/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="许唢呐">
+      <meta itemprop="description" content="保持理智，认真生活！">
+      <meta itemprop="image" content="xusuona.github.io/images/1.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="许唢呐的个人江湖">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+            
+            <a href="xusuona.github.io/2019/10/09/git常用命令/" class="post-title-link" itemprop="url">未命名</a>
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2019-10-09 10:45:57" itemprop="dateCreated datePublished" datetime="2019-10-09T10:45:57+08:00">2019-10-09</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-10-10 20:52:24" itemprop="dateModified" datetime="2019-10-10T20:52:24+08:00">2019-10-10</time>
+              </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>查看项目历史版本</p>
+<pre><code>git reflog</code></pre><p>根据序列号前进或回退版本</p>
+<pre><code>git reset --hard [序列号]</code></pre><p>查看文件内容</p>
+<pre><code>cat [文件名]</code></pre><p>查看分支情况</p>
+<pre><code>git branch -v</code></pre><p>查看项目当前状态</p>
+<pre><code>git status</code></pre><p>创建分支</p>
+<pre><code>git branch [分支名]</code></pre><p>切换分支</p>
+<pre><code>git checkout [分支名]</code></pre><p>添加到本地库</p>
+<pre><code>git add [文件名]</code></pre><p>提交到远程库</p>
+<pre><code>git commit -m &quot;修改描述&quot; [文件名]</code></pre><p>合并分支，先切换至待合并分支上，再merge合并分支对象</p>
+<pre><code>git checkout [待合并分支名]
+git merge [分支名]</code></pre><p>创建文件夹</p>
+<pre><code>mkdir [文件名]</code></pre><p>初始化仓库，进入文件夹后</p>
+<pre><code>git init</code></pre><p>查看git用户与邮箱</p>
+<pre><code>git config user.name 
+git config user.email</code></pre><p>配置公钥以后，与gitee添加联系</p>
+<pre><code>git remote add gitee git@gitee.com:xusuona/spaims.git</code></pre><p>git关联之后提交整体步骤</p>
+<pre><code>git add .
+git commit -m 提交介绍
+git push gitee master</code></pre><p>期间还可不间断地查看状态</p>
+<pre><code>git status</code></pre><p>若远程库中留有无关文件，但本地已提交，则在本地删除该已提交文件</p>
+<pre><code>git  rm -r --cached [文件名]</code></pre>
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+          <div class="post-eof"></div>
+        
+      </footer>
+  </div>
+  
+  
+  
+  </article>
+
+    
+        <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block home">
+    <link itemprop="mainEntityOfPage" href="https://xusuona.github.ioxusuona.github.io/2019/10/09/mybatis-generator使用/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="许唢呐">
+      <meta itemprop="description" content="保持理智，认真生活！">
+      <meta itemprop="image" content="xusuona.github.io/images/1.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="许唢呐的个人江湖">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+            
+            <a href="xusuona.github.io/2019/10/09/mybatis-generator使用/" class="post-title-link" itemprop="url">未命名</a>
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2019-10-09 10:08:54 / 修改时间：10:08:55" itemprop="dateCreated datePublished" datetime="2019-10-09T10:08:54+08:00">2019-10-09</time>
+            </span>
+          
+            
+
+            
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+          <div class="post-eof"></div>
+        
+      </footer>
+  </div>
+  
+  
+  
+  </article>
+
+    
+        <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block home">
+    <link itemprop="mainEntityOfPage" href="https://xusuona.github.ioxusuona.github.io/2019/10/08/服务器安装mysql/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="许唢呐">
+      <meta itemprop="description" content="保持理智，认真生活！">
+      <meta itemprop="image" content="xusuona.github.io/images/1.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="许唢呐的个人江湖">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+            
+            <a href="xusuona.github.io/2019/10/08/服务器安装mysql/" class="post-title-link" itemprop="url">未命名</a>
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2019-10-08 21:32:09" itemprop="dateCreated datePublished" datetime="2019-10-08T21:32:09+08:00">2019-10-08</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-10-17 16:44:22" itemprop="dateModified" datetime="2019-10-17T16:44:22+08:00">2019-10-17</time>
+              </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>首先查看是否已安装mysql</p>
+<p>rpm -qa|grep -i mysql</p>
+<p>则先停止mysqld服务</p>
+<p>systemctl stop mysqld.service</p>
+<p>接着查看mysql安装目录</p>
+<p>rpm -qa |grep -i mysql</p>
+<p>按照罗列的目录卸载相应文件</p>
+<p>yum remove mysql-community mysql-community-server mysql-community-libs mysql-community-common mysql-community-release</p>
+<p>检查是否卸载完成，若无文件显示则显示成功，若有则重新卸载，注意文件名</p>
+<p>rpm -qa |grep -i mysql</p>
+<p>清理mysqk残余文件</p>
+<p>find / -name mysql.</p>
+<p>删除所显示的文件名</p>
+<p>rm -rf /usr/share/mysql</p>
+<p>至此，mysql卸载完毕。可按照如下步骤进行安装</p>
+<p>首先根据系统版本（如centos7）到mysql官网下载yum源</p>
+<p><a href="https://dev.mysql.com/downloads/repo/yum/" target="_blank" rel="noopener">https://dev.mysql.com/downloads/repo/yum/</a></p>
+<p>选择对应版本的mysql复制链接</p>
+<p>在服务器命令行执行链接</p>
+<p>wget <a href="https://dev.mysql.com/get/mysql80-community-release-el7-3.noarch.rpm" target="_blank" rel="noopener">https://dev.mysql.com/get/mysql80-community-release-el7-3.noarch.rpm</a></p>
+<p>本地安装yum源</p>
+<p>yum localinstall mysql80-community-release-el7-3.noarch.rpm</p>
+<p>检测是否安装完成，并找到对应软件包，复制名称</p>
+<p>yum install mysql server</p>
+<p>查看mysql日志</p>
+<p>vim /var/log/mysqld.log</p>
+<p>用yum安装mysql后默认没有登录密码，但是需要确保mysql服务已经打开，如果没有打开，进入mysql后会提示</p>
+<p>ERROR 2002 (HY000): Can’t connect to local MySQL server through socket ‘/var/lib/mysql/mysql.sock’ (2)</p>
+<p>首先查看mysql服务端口</p>
+<p>ps -ef|grep mysql</p>
+<p>接着查看mysql运行状态</p>
+<p>systemctl status mysqld.service</p>
+<p>看看是否为active</p>
+<p>若是可直接输入</p>
+<p>mysql -u root -p</p>
+<p>一路回车进入</p>
+<p>若不是，则开启服务</p>
+<p>systemctl start mysqld.service</p>
+<p>若一直未响应，则按ctrl+c键退出</p>
+<p>使用service mysql restart命令重启服务，直至mysql的状态为active</p>
+<p>若开启服务后依旧显示需要密码，则通过日志查找随机密码</p>
+<p>grep ‘temporary password’  /var/log/mysqld.log</p>
+<p>紧接着复制随机密码便可登陆</p>
+<p>首次登陆需要进行修改密码操作，对应不同版本的修改密码有不同的操作</p>
+<p>在5.7.6版本以前使用语句</p>
+<p>SET PASSWORD = PASSWORD(‘Xiaoming250’); </p>
+<p>之后的使用</p>
+<p>ALTER USER USER() IDENTIFIED BY ‘Xiaoming250’;</p>
+<p>5.7.6版本之后的密码也有设置要求，必须含大小写字母、数字和特殊字符</p>
+<p>进入mysql后，首先设置root密码<br>但需提前使用以下语句，进入mysql数据库</p>
+<p>use mysql</p>
+<p>SET PASSWORD FOR ‘root’@’localhost’ = PASSWORD(‘newpwd’);</p>
+<p>查看用户权限</p>
+<p>select host,user from user;</p>
+<p>若要远程连接的话，需要创建一个所有ip都能够访问的用户</p>
+<p>grant all on <em>.</em> to ‘用户名‘@’%’ identified by ‘密码’;</p>
+<p>设置用户权限</p>
+<p>grant all privileges on <em>.</em> to spamc@’localhost’;</p>
+<p>或者给root用户设置权限</p>
+<p>update user set host=’%’ where user=’root’ and host=’localhost’;</p>
+<p>但建议创建一个新用户，在没有进行其他的测试的情况下，本人设置root权限后是云服务器端是不能使用root用户登录的。</p>
+<p>创建好后刷新权限</p>
+<p>flush privileges;</p>
+<p>最后一步就是还要查看云服务器的安全组设置，看看有没有开放3306端口</p>
+<p>紧接着在本地电脑（非云服务器）端使用navicat创建一个新连接即可</p>
+<p>若后续想升级mysql，则需要对数据库进行备份</p>
+<p>mysqldump -u root -p word &gt; word.sql </p>
+<p>word为数据库名</p>
+<p>还原数据库操作是</p>
+<p>mysqldump -u root -p word &lt; word.sql</p>
+
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+          <div class="post-eof"></div>
+        
+      </footer>
+  </div>
+  
+  
+  
+  </article>
+
+    
+        <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block home">
     <link itemprop="mainEntityOfPage" href="https://xusuona.github.ioxusuona.github.io/2019/09/19/世界，你好/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -327,7 +969,7 @@
         
           <a href="xusuona.github.io/archives/">
         
-          <span class="site-state-item-count">1</span>
+          <span class="site-state-item-count">7</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
