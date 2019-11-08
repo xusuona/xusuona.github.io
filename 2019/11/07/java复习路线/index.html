@@ -55,18 +55,18 @@
   };
 </script>
 
-  <meta name="description" content="1.使用maven创建SpringBoot项目 SpringBoot目录结构 大体和maven中目录相同，只不过在resource文件夹下多了三个文件夹，分别是 静态资源目录 /static 层页面目录 /templates SpringBoot配置文件 /application.properties">
+  <meta name="description" content="###（一）语言基础阅读Java集合源码，重点复习面试常问集合框架，比如Hashtable、HashMap、ConcurrentHashMap等。 推荐网站：http://cmsblogs.com/?p=4781 同时查看面经以及面试题，需弄懂常见面试问题，例如：list、Map和Set的区别是什么。 虚拟机部分看《深入理解Java虚拟机》这本书，重点复习内存、垃圾回收和类加载器这几部分内容。 并">
 <meta property="og:type" content="article">
 <meta property="og:title" content="许唢呐的个人江湖">
-<meta property="og:url" content="https://xusuona.github.io/2019/10/09/SpringBoot学习笔记/index.html">
+<meta property="og:url" content="https://xusuona.github.io/2019/11/07/java复习路线/index.html">
 <meta property="og:site_name" content="许唢呐的个人江湖">
-<meta property="og:description" content="1.使用maven创建SpringBoot项目 SpringBoot目录结构 大体和maven中目录相同，只不过在resource文件夹下多了三个文件夹，分别是 静态资源目录 /static 层页面目录 /templates SpringBoot配置文件 /application.properties">
+<meta property="og:description" content="###（一）语言基础阅读Java集合源码，重点复习面试常问集合框架，比如Hashtable、HashMap、ConcurrentHashMap等。 推荐网站：http://cmsblogs.com/?p=4781 同时查看面经以及面试题，需弄懂常见面试问题，例如：list、Map和Set的区别是什么。 虚拟机部分看《深入理解Java虚拟机》这本书，重点复习内存、垃圾回收和类加载器这几部分内容。 并">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-10-10T12:36:29.753Z">
+<meta property="og:updated_time" content="2019-11-07T11:41:49.730Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="许唢呐的个人江湖">
-<meta name="twitter:description" content="1.使用maven创建SpringBoot项目 SpringBoot目录结构 大体和maven中目录相同，只不过在resource文件夹下多了三个文件夹，分别是 静态资源目录 /static 层页面目录 /templates SpringBoot配置文件 /application.properties">
-  <link rel="canonical" href="https://xusuona.github.io/2019/10/09/SpringBoot学习笔记/">
+<meta name="twitter:description" content="###（一）语言基础阅读Java集合源码，重点复习面试常问集合框架，比如Hashtable、HashMap、ConcurrentHashMap等。 推荐网站：http://cmsblogs.com/?p=4781 同时查看面经以及面试题，需弄懂常见面试问题，例如：list、Map和Set的区别是什么。 虚拟机部分看《深入理解Java虚拟机》这本书，重点复习内存、垃圾回收和类加载器这几部分内容。 并">
+  <link rel="canonical" href="https://xusuona.github.io/2019/11/07/java复习路线/">
 
 
 <script id="page-configurations">
@@ -217,7 +217,7 @@
   
   
   <div class="post-block post">
-    <link itemprop="mainEntityOfPage" href="https://xusuona.github.ioxusuona.github.io/2019/10/09/SpringBoot学习笔记/">
+    <link itemprop="mainEntityOfPage" href="https://xusuona.github.ioxusuona.github.io/2019/11/07/java复习路线/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="许唢呐">
@@ -245,19 +245,11 @@
                 
               
 
-              <time title="创建时间：2019-10-09 15:09:11" itemprop="dateCreated datePublished" datetime="2019-10-09T15:09:11+08:00">2019-10-09</time>
+              <time title="创建时间：2019-11-07 17:26:44 / 修改时间：19:41:49" itemprop="dateCreated datePublished" datetime="2019-11-07T17:26:44+08:00">2019-11-07</time>
             </span>
           
             
 
-            
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2019-10-10 20:36:29" itemprop="dateModified" datetime="2019-10-10T20:36:29+08:00">2019-10-10</time>
-              </span>
             
           
 
@@ -272,12 +264,34 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>1.使用maven创建SpringBoot项目</p>
-<p>SpringBoot目录结构</p>
-<p>大体和maven中目录相同，只不过在resource文件夹下多了三个文件夹，分别是</p>
-<p>静态资源目录 /static</p>
-<p>层页面目录 /templates</p>
-<p>SpringBoot配置文件 /application.properties</p>
+        <p>###（一）语言基础<br>阅读<strong>Java集合源码</strong>，重点复习面试常问集合框架，比如Hashtable、HashMap、ConcurrentHashMap等。</p>
+<p>推荐网站：<a href="http://cmsblogs.com/?p=4781" target="_blank" rel="noopener">http://cmsblogs.com/?p=4781</a></p>
+<p>同时查看面经以及面试题，需弄懂常见面试问题，例如：list、Map和Set的区别是什么。</p>
+<p><strong>虚拟机部分</strong>看《深入理解Java虚拟机》这本书，重点复习<strong>内存、垃圾回收和类加载器</strong>这几部分内容。</p>
+<p><strong>并发</strong>结合边看视频边看书的方式，书的话看《Java并发编程艺术》，视频看可以上慕课网看《Java并发编程入门与高并发面试》前十章。</p>
+<p>正版网址：<a href="https://coding.imooc.com/class/195.html" target="_blank" rel="noopener">https://coding.imooc.com/class/195.html</a></p>
+<p>百度网盘链接（提取码usv3）：<br><a href="https://pan.baidu.com/s/1XV_wtJyThVLEW1Qvk-a4uA" target="_blank" rel="noopener">https://pan.baidu.com/s/1XV_wtJyThVLEW1Qvk-a4uA</a></p>
+<p>###（二）设计模式<br><strong>设计模式</strong>可以跟着上课的步骤来，老师讲得水没关系，可以选择看博客。书的话是必看的，本人看的是上课的教材《软件结构设计体系》，但不推荐这本书，因为里面有许多错误的地方。</p>
+<p>面试中常被问到的设计模式包括<strong>单例模式、几个工厂模式、代理模式</strong>，在回答中最好结合Java类库（即上文提到的Java集合源码）的实现，或者Spring等框架的实现。</p>
+<p>###（三）框架与中间件<br>框架主要是<strong>Spring框架</strong>，重点复习<strong>IOC和AOP原理</strong>。</p>
+<p>中间件重点是<strong>缓存和消息队列</strong>。缓存中间件复习<strong>Redis</strong> ，主要看视频；消息队列可以看看<strong>《RabbitMQ 实战指南》</strong></p>
+<p>###（四）数据库<br>数据库也可以跟着课本的内容来，但是每次实验都要认真对待。后期进阶可以听音频：<strong>《MySql实战45讲》</strong></p>
+<p>百度网盘链接（提取码xgef）：<br><a href="https://pan.baidu.com/s/1gqKulNIc5I4kQk7tj1eYFQ" target="_blank" rel="noopener">https://pan.baidu.com/s/1gqKulNIc5I4kQk7tj1eYFQ </a></p>
+<p>也可以上Leetcode刷几道题目练习一下。看课本的时候重点理解<strong>关系型数据库管理系统、事务、范式</strong>等概念。</p>
+<p>重点复习<strong>InnoDB存储引擎、索引、锁、事务、性能优化</strong>等内容。</p>
+<p>###（五）数据结构与算法</p>
+<hr>
+<p><strong>分割线以示重要性！</strong></p>
+<p>算法跟着《算法分析与设计》这门课开始学习，<strong>刷oj</strong>。</p>
+<p><strong>一定要刷Leetcode</strong> ，不懂的看题解（上github上面可以找，这个姿势有待解锁）</p>
+<p>Java题解网址：<a href="https://github.com/qiyuangong/leetcode" target="_blank" rel="noopener">https://github.com/qiyuangong/leetcode</a></p>
+<p>数据结构通过上文提到的<strong>Java集合源码了解</strong>，也可以通过看公众号或者知乎专栏来了解。公众号有几个还不错：码农翻身、苦逼的帅地等。</p>
+<p>###（六）计算机网络<br>计网主要也是看课本，课本知识一定不能丢。重点复习网际层IP、运输层TCP/UDP。需要找高频复习题复习。</p>
+<p>###（七）计算机操作系统<br>这部分针对面试题来复习，因为理论知识已经系统学过了。目前的话是复习高频出现的知识，例如线程间通信、多线程调度方式等。</p>
+<p>对于linux系统的话，则需要了解一些常用的基本命令。</p>
+<p>###（八）系统设计<br>主要复习网站设计架构方面内容，推荐《大型网站架构》这本书。</p>
+<p>之后可复习分布式知识，了解分布式的架构及理论（是否看框架待定）。推荐《从Paxos到Zookeeper》和《大规模分布式存储系统》。</p>
+<p>之后再看看微服务，推荐《微服务设计》。</p>
 
     </div>
 
@@ -294,7 +308,7 @@
           <div class="post-nav">
             <div class="post-nav-next post-nav-item">
               
-                <a href="xusuona.github.io/2019/10/09/git常用命令/" rel="next" title="">
+                <a href="xusuona.github.io/2019/11/02/动态代理与静态代理/" rel="next" title="">
                   <i class="fa fa-chevron-left"></i> 
                 </a>
               
@@ -303,10 +317,6 @@
             <span class="post-nav-divider"></span>
 
             <div class="post-nav-prev post-nav-item">
-              
-                <a href="xusuona.github.io/2019/10/10/初步了解jvm/" rel="prev" title="">
-                   <i class="fa fa-chevron-right"></i>
-                </a>
               
             </div>
           </div>
@@ -371,7 +381,7 @@
         
           <a href="xusuona.github.io/archives/">
         
-          <span class="site-state-item-count">7</span>
+          <span class="site-state-item-count">6</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
