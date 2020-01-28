@@ -55,18 +55,18 @@
   };
 </script>
 
-  <meta name="description" content="查看项目历史版本 git reflog根据序列号前进或回退版本 git reset --hard [序列号]查看文件内容 cat [文件名]查看分支情况 git branch -v查看项目当前状态 git status创建分支 git branch [分支名]切换分支 git checkout [分支名]添加到本地库 git add [文件名]提交到远程库 git commit -m &amp;quot;">
+  <meta name="description" content="一、事务 1.事务的四大特性 （1）原子性： 定义：一个事务要么全完成，要么全不完成，若事务执行过程中发现错误，事务便将回滚。 原理：（首先，myisam不支持事务回滚）而InnoDB引擎则依靠undo日志实现，一个事务进行时，所执行的sql语句会在undo日志中记载，当事务执行失败，需要回滚时，就将执行与undo日志中相反的操作。 （2）一致性： 定义：事务在执行过程中数据库的完整性约束没有被破">
 <meta property="og:type" content="article">
-<meta property="og:title" content="许唢呐的个人江湖">
-<meta property="og:url" content="https://xusuona.github.io/2019/10/09/git常用命令/index.html">
+<meta property="og:title" content="java并发编程">
+<meta property="og:url" content="https://xusuona.github.io/2019/12/12/mysql知识点集锦/index.html">
 <meta property="og:site_name" content="许唢呐的个人江湖">
-<meta property="og:description" content="查看项目历史版本 git reflog根据序列号前进或回退版本 git reset --hard [序列号]查看文件内容 cat [文件名]查看分支情况 git branch -v查看项目当前状态 git status创建分支 git branch [分支名]切换分支 git checkout [分支名]添加到本地库 git add [文件名]提交到远程库 git commit -m &amp;quot;">
+<meta property="og:description" content="一、事务 1.事务的四大特性 （1）原子性： 定义：一个事务要么全完成，要么全不完成，若事务执行过程中发现错误，事务便将回滚。 原理：（首先，myisam不支持事务回滚）而InnoDB引擎则依靠undo日志实现，一个事务进行时，所执行的sql语句会在undo日志中记载，当事务执行失败，需要回滚时，就将执行与undo日志中相反的操作。 （2）一致性： 定义：事务在执行过程中数据库的完整性约束没有被破">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-10-10T12:52:24.039Z">
+<meta property="og:updated_time" content="2020-01-28T10:32:59.507Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="许唢呐的个人江湖">
-<meta name="twitter:description" content="查看项目历史版本 git reflog根据序列号前进或回退版本 git reset --hard [序列号]查看文件内容 cat [文件名]查看分支情况 git branch -v查看项目当前状态 git status创建分支 git branch [分支名]切换分支 git checkout [分支名]添加到本地库 git add [文件名]提交到远程库 git commit -m &amp;quot;">
-  <link rel="canonical" href="https://xusuona.github.io/2019/10/09/git常用命令/">
+<meta name="twitter:title" content="java并发编程">
+<meta name="twitter:description" content="一、事务 1.事务的四大特性 （1）原子性： 定义：一个事务要么全完成，要么全不完成，若事务执行过程中发现错误，事务便将回滚。 原理：（首先，myisam不支持事务回滚）而InnoDB引擎则依靠undo日志实现，一个事务进行时，所执行的sql语句会在undo日志中记载，当事务执行失败，需要回滚时，就将执行与undo日志中相反的操作。 （2）一致性： 定义：事务在执行过程中数据库的完整性约束没有被破">
+  <link rel="canonical" href="https://xusuona.github.io/2019/12/12/mysql知识点集锦/">
 
 
 <script id="page-configurations">
@@ -80,7 +80,7 @@
   };
 </script>
 
-  <title> | 许唢呐的个人江湖</title>
+  <title>java并发编程 | 许唢呐的个人江湖</title>
   
 
 
@@ -217,7 +217,7 @@
   
   
   <div class="post-block post">
-    <link itemprop="mainEntityOfPage" href="https://xusuona.github.ioxusuona.github.io/2019/10/09/git常用命令/">
+    <link itemprop="mainEntityOfPage" href="https://xusuona.github.ioxusuona.github.io/2019/12/12/mysql知识点集锦/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="许唢呐">
@@ -229,7 +229,7 @@
       <meta itemprop="name" content="许唢呐的个人江湖">
     </span>
       <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
+        <h1 class="post-title" itemprop="name headline">java并发编程
 
           
         </h1>
@@ -245,7 +245,7 @@
                 
               
 
-              <time title="创建时间：2019-10-09 10:45:57" itemprop="dateCreated datePublished" datetime="2019-10-09T10:45:57+08:00">2019-10-09</time>
+              <time title="创建时间：2019-12-12 15:08:36" itemprop="dateCreated datePublished" datetime="2019-12-12T15:08:36+08:00">2019-12-12</time>
             </span>
           
             
@@ -256,7 +256,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2019-10-10 20:52:24" itemprop="dateModified" datetime="2019-10-10T20:52:24+08:00">2019-10-10</time>
+                <time title="修改时间：2020-01-28 18:32:59" itemprop="dateModified" datetime="2020-01-28T18:32:59+08:00">2020-01-28</time>
               </span>
             
           
@@ -272,28 +272,41 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>查看项目历史版本</p>
-<pre><code>git reflog</code></pre><p>根据序列号前进或回退版本</p>
-<pre><code>git reset --hard [序列号]</code></pre><p>查看文件内容</p>
-<pre><code>cat [文件名]</code></pre><p>查看分支情况</p>
-<pre><code>git branch -v</code></pre><p>查看项目当前状态</p>
-<pre><code>git status</code></pre><p>创建分支</p>
-<pre><code>git branch [分支名]</code></pre><p>切换分支</p>
-<pre><code>git checkout [分支名]</code></pre><p>添加到本地库</p>
-<pre><code>git add [文件名]</code></pre><p>提交到远程库</p>
-<pre><code>git commit -m &quot;修改描述&quot; [文件名]</code></pre><p>合并分支，先切换至待合并分支上，再merge合并分支对象</p>
-<pre><code>git checkout [待合并分支名]
-git merge [分支名]</code></pre><p>创建文件夹</p>
-<pre><code>mkdir [文件名]</code></pre><p>初始化仓库，进入文件夹后</p>
-<pre><code>git init</code></pre><p>查看git用户与邮箱</p>
-<pre><code>git config user.name 
-git config user.email</code></pre><p>配置公钥以后，与gitee添加联系</p>
-<pre><code>git remote add gitee git@gitee.com:xusuona/spaims.git</code></pre><p>git关联之后提交整体步骤</p>
-<pre><code>git add .
-git commit -m 提交介绍
-git push gitee master</code></pre><p>期间还可不间断地查看状态</p>
-<pre><code>git status</code></pre><p>若远程库中留有无关文件，但本地已提交，则在本地删除该已提交文件</p>
-<pre><code>git  rm -r --cached [文件名]</code></pre>
+        <p>一、事务</p>
+<p>1.事务的四大特性</p>
+<p>（1）原子性：</p>
+<p>定义：一个事务要么全完成，要么全不完成，若事务执行过程中发现错误，事务便将回滚。</p>
+<p>原理：（首先，myisam不支持事务回滚）而InnoDB引擎则依靠undo日志实现，一个事务进行时，所执行的sql语句会在undo日志中记载，当事务执行失败，需要回滚时，就将执行与undo日志中相反的操作。</p>
+<p>（2）一致性：</p>
+<p>定义：事务在执行过程中数据库的完整性约束没有被破坏，以及数据状态都是合法的。</p>
+<p>原理：这里的合法举个小例子，例如甲转一笔钱给乙，则从甲这边扣除的钱款需要等于在乙那边增加的钱款。因此，这不仅仅要求在数据库上面保持一致，在应用层也要有所约束才行。</p>
+<p>（3）隔离性：</p>
+<p>定义：事务与事务之间不相干扰。</p>
+<p>原理：事实上，单线程的顺序操作本身就满足了隔离性，但是在并发条件，满足这个特性就不怎么好处理，mysql数据库使用了锁机制来保证同一时刻只有一个事务对数据进行操作。</p>
+<p>事务在并发过程中会造成以下几种错误：</p>
+<ul>
+<li>脏读：即当前事务能够读取到其他事务未提交的数据。</li>
+<li>不可重复读：事务前后读取同一数据，但获取结果却不同。原因是在前后过程中其他事务已对该数据进行修改。</li>
+<li>幻读：事务前后查询数据库，返回的结果行数却不同。</li>
+</ul>
+<p>相应的，解决这三种读操作问题的隔离级别有四种：</p>
+<ul>
+<li>读未提交：select语句不加锁</li>
+<li>读已提交：普通select使用快照读，这是一种不加锁的一致性读，底层使用MVCC实现。</li>
+<li>可重复读：Mysql的默认引擎</li>
+<li>可串行化：</li>
+</ul>
+<p>MVCC（Multi-Version Concurrency Control）指多版本并发控制协议。原理简单点说就是为事务分配一个版本号，事务内部的版本号用来与查询到的数据记录行的版本号比较，若不同，则使用undolog日志进行回滚。</p>
+<p>（4）持久性：</p>
+<p>定义：事务一旦被提交，则其所执行的一系列操作将被永久地保存在数据库中。</p>
+<p>原理：由于innodb引擎对于数据读写的交互都是基于磁盘的，所以对于频繁的读写操作，效率是比较慢的。因此类比于计算机中cache，数据库创建了一个缓存BufferBlog来使效率提高。缓存里面存储的是数据库的一部分数据页，当在缓存里面找不到想要的数据时，才会去与磁盘打交道。同时，缓存里面的数据也会定期的刷新到磁盘中，这个过程称为“刷脏”。</p>
+<p>那如果数据库在还没来得及刷脏的时候宕机了呢？</p>
+<p>innodb引擎建立了redo日志来保证数据恢复，你写的sql语句都会在redolog中记载。</p>
+<p>这样又引出了一个问题——日志功能在服务器层的binlog日志也有实现，为什么innodb还要多此一举呢？</p>
+<p>因为redo日志它不像数据库服务器层的binlog日志，等到事务提交时才写进磁盘，而是在执行的过程中，实时的写入。同时也不像binlog一样，如果一个文件写不下了，就去重新创建一个新的文件继续写入新的操作语句，记载redo日志的文件是循环使用的。</p>
+<p>那每次都实时写入磁盘不是造成了性能损耗吗，还不如我直接把实时把缓存的数据写回磁盘？</p>
+<p>首先，第一个问题需要明确的是为了数据能够安全，就算宕机了也能恢复，一些性能损耗还是可以接受的，但是如果换成写缓存的话，成本就太高了。因为缓存中的数据页是随机分布，每次写回势必都要寻找相应的位置。而换成redo日志机制则相对成本小一点，因为日志存储时是顺序存储的。同时，刷脏是以数据页为单位的，就算一点小修改都有整页写回磁盘，而redo日志需要写回的只是新增的部分，因此效率大大提高。</p>
+
     </div>
 
     
@@ -309,8 +322,8 @@ git push gitee master</code></pre><p>期间还可不间断地查看状态</p>
           <div class="post-nav">
             <div class="post-nav-next post-nav-item">
               
-                <a href="xusuona.github.io/2019/10/08/服务器安装mysql/" rel="next" title="">
-                  <i class="fa fa-chevron-left"></i> 
+                <a href="xusuona.github.io/2019/12/02/服务器安装mysql/" rel="next" title="测试博客按例">
+                  <i class="fa fa-chevron-left"></i> 测试博客按例
                 </a>
               
             </div>
@@ -318,10 +331,6 @@ git push gitee master</code></pre><p>期间还可不间断地查看状态</p>
             <span class="post-nav-divider"></span>
 
             <div class="post-nav-prev post-nav-item">
-              
-                <a href="xusuona.github.io/2019/10/10/初步了解jvm/" rel="prev" title="">
-                   <i class="fa fa-chevron-right"></i>
-                </a>
               
             </div>
           </div>
@@ -386,7 +395,7 @@ git push gitee master</code></pre><p>期间还可不间断地查看状态</p>
         
           <a href="xusuona.github.io/archives/">
         
-          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-count">8</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -431,7 +440,7 @@ git push gitee master</code></pre><p>期间还可不间断地查看状态</p>
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+        <div class="copyright">&copy; 2019 – <span itemprop="copyrightYear">2020</span>
   <span class="with-love" id="animate">
     <i class="fa fa-user"></i>
   </span>
