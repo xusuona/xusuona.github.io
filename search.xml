@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title>java并发编程</title>
+    <url>/2019/12/12/mysql%E7%9F%A5%E8%AF%86%E7%82%B9%E9%9B%86%E9%94%A6/</url>
+    <content><![CDATA[<p>一、事务</p><p>1.事务的四大特性</p><p>（1）原子性：</p><p>定义：一个事务要么全完成，要么全不完成，若事务执行过程中发现错误，事务便将回滚。</p><p>原理：（首先，myisam不支持事务回滚）而InnoDB引擎则依靠undo日志实现，一个事务进行时，所执行的sql语句会在undo日志中记载，当事务执行失败，需要回滚时，就将执行与undo日志中相反的操作。</p><a id="more"></a>
+
+
+
+
+<p>（2）一致性：</p>
+<p>定义：事务在执行过程中数据库的完整性约束没有被破坏，以及数据状态都是合法的。</p>
+<p>原理：这里的合法举个小例子，例如甲转一笔钱给乙，则从甲这边扣除的钱款需要等于在乙那边增加的钱款。因此，这不仅仅要求在数据库上面保持一致，在应用层也要有所约束才行。</p>
+<p>（3）隔离性：</p>
+<p>定义：事务与事务之间不相干扰。</p>
+<p>原理：事实上，单线程的顺序操作本身就满足了隔离性，但是在并发条件，满足这个特性就不怎么好处理，mysql数据库使用了锁机制来保证同一时刻只有一个事务对数据进行操作。</p>
+<p>事务在并发过程中会造成以下几种错误：</p>
+<ul>
+<li>脏读：即当前事务能够读取到其他事务未提交的数据。</li>
+<li>不可重复读：事务前后读取同一数据，但获取结果却不同。原因是在前后过程中其他事务已对该数据进行修改。</li>
+<li>幻读：事务前后查询数据库，返回的结果行数却不同。</li>
+</ul>
+<p>相应的，解决这三种读操作问题的隔离级别有四种：</p>
+<ul>
+<li>读未提交：select语句不加锁</li>
+<li>读已提交：普通select使用快照读，这是一种不加锁的一致性读，底层使用MVCC实现。</li>
+<li>可重复读：Mysql的默认引擎</li>
+<li>可串行化：</li>
+</ul>
+<p>MVCC（Multi-Version Concurrency Control）指多版本并发控制协议。原理简单点说就是为事务分配一个版本号，事务内部的版本号用来与查询到的数据记录行的版本号比较，若不同，则使用undolog日志进行回滚。</p>
+<p>（4）持久性：</p>
+<p>定义：事务一旦被提交，则其所执行的一系列操作将被永久地保存在数据库中。</p>
+<p>原理：由于innodb引擎对于数据读写的交互都是基于磁盘的，所以对于频繁的读写操作，效率是比较慢的。因此类比于计算机中cache，数据库创建了一个缓存BufferBlog来使效率提高。缓存里面存储的是数据库的一部分数据页，当在缓存里面找不到想要的数据时，才会去与磁盘打交道。同时，缓存里面的数据也会定期的刷新到磁盘中，这个过程称为“刷脏”。</p>
+<p>那如果数据库在还没来得及刷脏的时候宕机了呢？</p>
+<p>innodb引擎建立了redo日志来保证数据恢复，你写的sql语句都会在redolog中记载。</p>
+<p>这样又引出了一个问题——日志功能在服务器层的binlog日志也有实现，为什么innodb还要多此一举呢？</p>
+<p>因为redo日志它不像数据库服务器层的binlog日志，等到事务提交时才写进磁盘，而是在执行的过程中，实时的写入。同时也不像binlog一样，如果一个文件写不下了，就去重新创建一个新的文件继续写入新的操作语句，记载redo日志的文件是循环使用的。</p>
+<p>那每次都实时写入磁盘不是造成了性能损耗吗，还不如我直接把实时把缓存的数据写回磁盘？</p>
+<p>首先，第一个问题需要明确的是为了数据能够安全，就算宕机了也能恢复，一些性能损耗还是可以接受的，但是如果换成写缓存的话，成本就太高了。因为缓存中的数据页是随机分布，每次写回势必都要寻找相应的位置。而换成redo日志机制则相对成本小一点，因为日志存储时是顺序存储的。同时，刷脏是以数据页为单位的，就算一点小修改都有整页写回磁盘，而redo日志需要写回的只是新增的部分，因此效率大大提高。</p>
+]]></content>
+      <categories>
+        <category>MySQL</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>测试博客按例</title>
+    <url>/2019/12/02/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%89%E8%A3%85mysql/</url>
+    <content><![CDATA[<p>首先查看是否已安装mysql</p><pre><code>rpm -qa|grep -i mysql</code></pre><p>则先停止mysqld服务</p><pre><code>systemctl stop mysqld.service</code></pre><p>接着查看mysql安装目录</p><pre><code>rpm -qa |grep -i mysql</code></pre><p>按照罗列的目录卸载相应文件</p><pre><code>yum remove mysql-community mysql-community-server mysql-community-libs mysql-community-common mysql-community-release</code></pre><a id="more"></a>
+
+
+
+<p>检查是否卸载完成，若无文件显示则显示成功，若有则重新卸载，注意文件名</p>
+<pre><code>rpm -qa |grep -i mysql</code></pre><p>清理mysqk残余文件</p>
+<pre><code>find / -name mysql.</code></pre><p>删除所显示的文件名</p>
+<pre><code>rm -rf /usr/share/mysql</code></pre><p>至此，mysql卸载完毕。可按照如下步骤进行安装</p>
+<p>首先根据系统版本（如centos7）到mysql官网下载yum源</p>
+<pre><code>https://dev.mysql.com/downloads/repo/yum/</code></pre><p>选择对应版本的mysql复制链接</p>
+<p>在服务器命令行执行链接</p>
+<pre><code>wget https://dev.mysql.com/get/mysql80-community-release-el7-3.noarch.rpm</code></pre><p>本地安装yum源</p>
+<pre><code>yum localinstall mysql80-community-release-el7-3.noarch.rpm</code></pre><p>检测是否安装完成，并找到对应软件包，复制名称</p>
+<pre><code>yum install mysql server</code></pre><p>查看mysql日志</p>
+<pre><code>vim /var/log/mysqld.log</code></pre><p>用yum安装mysql后默认没有登录密码，但是需要确保mysql服务已经打开，如果没有打开，进入mysql后会提示</p>
+<pre><code>ERROR 2002 (HY000): Can&apos;t connect to local MySQL server through socket &apos;/var/lib/mysql/mysql.sock&apos; (2)</code></pre><p>首先查看mysql服务端口</p>
+<pre><code>ps -ef|grep mysql</code></pre><p>接着查看mysql运行状态</p>
+<pre><code>systemctl status mysqld.service</code></pre><p>看看是否为active</p>
+<p>若是可直接输入</p>
+<pre><code>mysql -u root -p</code></pre><p>一路回车进入</p>
+<p>若不是，则开启服务</p>
+<pre><code>systemctl start mysqld.service</code></pre><p>若一直未响应，则按ctrl+c键退出</p>
+<p>使用service mysql restart命令重启服务，直至mysql的状态为active</p>
+<p>若开启服务后依旧显示需要密码，则通过日志查找随机密码</p>
+<pre><code>grep &apos;temporary password&apos;  /var/log/mysqld.log</code></pre><p>紧接着复制随机密码便可登陆</p>
+<p>首次登陆需要进行修改密码操作，对应不同版本的修改密码有不同的操作</p>
+<p>在5.7.6版本以前使用语句</p>
+<pre><code>SET PASSWORD = PASSWORD(&apos;Xiaoming250&apos;); </code></pre><p>之后的使用</p>
+<pre><code>ALTER USER USER() IDENTIFIED BY &apos;Xiaoming250&apos;;</code></pre><p>5.7.6版本之后的密码也有设置要求，必须含大小写字母、数字和特殊字符</p>
+<p>进入mysql后，首先设置root密码<br>但需提前使用以下语句，进入mysql数据库</p>
+<pre><code>use mysql
+
+SET PASSWORD FOR &apos;root&apos;@&apos;localhost&apos; = PASSWORD(&apos;newpwd&apos;);</code></pre><p>查看用户权限</p>
+<pre><code>select host,user from user;</code></pre><p>若要远程连接的话，需要创建一个所有ip都能够访问的用户</p>
+<pre><code>grant all on *.* to &apos;用户名&apos;@&apos;%&apos; identified by &apos;密码&apos;;</code></pre><p>设置用户权限</p>
+<pre><code>grant all privileges on *.* to spamc@&apos;localhost&apos;;</code></pre><p>或者给root用户设置权限</p>
+<pre><code>update user set host=&apos;%&apos; where user=&apos;root&apos; and host=&apos;localhost&apos;;</code></pre><p>但建议创建一个新用户，在没有进行其他的测试的情况下，本人设置root权限后是云服务器端是不能使用root用户登录的。</p>
+<p>创建好后刷新权限</p>
+<pre><code>flush privileges;</code></pre><p>最后一步就是还要查看云服务器的安全组设置，看看有没有开放3306端口</p>
+<p>紧接着在本地电脑（非云服务器）端使用navicat创建一个新连接即可</p>
+<p>若后续想升级mysql，则需要对数据库进行备份</p>
+<pre><code>mysqldump -u root -p word &gt; word.sql </code></pre><p>word为数据库名</p>
+<p>还原数据库操作是</p>
+<pre><code>mysqldump -u root -p word &lt; word.sql</code></pre>]]></content>
+      <categories>
+        <category>MySQL</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>初步了解jvm</title>
+    <url>/2019/11/26/%E5%88%9D%E6%AD%A5%E4%BA%86%E8%A7%A3jvm/</url>
+    <content><![CDATA[<blockquote>
+<p>最近开始阅读《深入理解Java虚拟机》这本经典，也算是正式开启了我的jvm之旅。但是在读的过程中，我发觉自己的阅读效率并不是很高，有许多诸如“java堆”、“native堆”之类的名词总是印象不深，在后面翻阅时常常需要往前面查找相关的知识点。因此，我决定持续更新这篇博客，既为了增加阅读这本书过程中的名词积累，也为了在以后阅读中能够快速而准确地了解到相关解释。</p>
+</blockquote><a id="more"></a>
+<p>###1. 程序计数器（线程私有）<br>每条线程都有独立的程序计数器，故内存区域“线程私有”。当线程执行Java方法（即字节码时）,计数器值为字节码指令的内存地址；当执行Native方法时，计算器值为空。</p>
+<p>###2. Java堆（线程共享）</p>
+<p>Java堆（Java Heap）是Java虚拟机所管理的<strong>内存</strong>中最大的一块。它在虚拟机启动时即被创建，被所有线程共享。</p>
+<p>该内存区域存在的目的是存放对象实例，即为几乎所有的对象实例分配内存空间。因此，Java堆也是<strong>垃圾收集器</strong>（回收内存）管理的主要区域。</p>
+<p>###3. Java虚拟机栈（线程私有）<br>虚拟机栈是Java方法执行的内存区域，Java方法每次执行时都会在栈中创建一个栈帧，用于存储局部变量表、操作数栈、动态链接、方法出口等信息。</p>
+<p>每一个方法从调用到执行结束，相当于栈帧出栈入栈的过程。</p>
+<p>###4. 本地方法栈（线程私有）<br>虚拟机栈调用Java方法，而本地方法栈则是调用Native方法。</p>
+<p>###5. 方法区（线程共享）<br>方法区用于存储已被虚拟机加载的类信息，存储已被虚拟机加载的类信息、常量、静态变量和即时编译器编译后的代码等数据。</p>
+<p>###6. 运行时常量池（位于方法区）<br>编译期生成的各种字面常量和符号引用将在类被加载后进入运行时常量池存放。</p>
+]]></content>
+  </entry>
+  <entry>
+    <title>mysql语句</title>
+    <url>/2019/11/12/mysql%E8%AF%AD%E5%8F%A5/</url>
+    <content><![CDATA[<p>新建一个用户</p><pre><code>create user &apos;username&apos;@&apos;%&apos; identified by &apos;password&apos;;</code></pre><p>其中，username为用户名，password为密码。通配符 ‘%’ 表示任意远程主机可访问，若只限于本机使用，则使用 ‘localhost’ 。</p><a id="more"></a>
+
+<p>在mysql8中，密码的加密规则较之前几个版本发生了变化，从mysql_native_password变为了caching_sha2_password，因此若出现加密规则不匹配的问题</p>
+<pre><code>如：Authentication plugin &apos;caching_sha2_password&apos; cannot be loaded</code></pre><p>则可更改服务器用户的密码加密规则，语句如下：</p>
+<pre><code>ALTER USER &apos;username&apos;@&apos;%&apos; IDENTIFIED BY &apos;password&apos; PASSWORD EXPIRE NEVER;
+ALTER USER &apos;username&apos;@&apos;%&apos; IDENTIFIED WITH mysql_native_password BY &apos;password&apos;;
+flush privileges;</code></pre>]]></content>
+      <categories>
+        <category>MySQL</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>java复习路线</title>
+    <url>/2019/11/07/java%E5%A4%8D%E4%B9%A0%E8%B7%AF%E7%BA%BF/</url>
+    <content><![CDATA[<p>###（一）语言基础<br>阅读<strong>Java集合源码</strong>，重点复习面试常问集合框架，比如Hashtable、HashMap、ConcurrentHashMap等。</p><p>推荐网站：<a href="http://cmsblogs.com/?p=4781" target="_blank" rel="noopener">http://cmsblogs.com/?p=4781</a></p><p>同时查看面经以及面试题，需弄懂常见面试问题，例如：list、Map和Set的区别是什么。</p><p><strong>虚拟机部分</strong>看《深入理解Java虚拟机》这本书，重点复习<strong>内存、垃圾回收和类加载器</strong>这几部分内容。</p><a id="more"></a>
+
+
+
+<p><strong>并发</strong>结合边看视频边看书的方式，书的话看《Java并发编程艺术》，视频看可以上慕课网看《Java并发编程入门与高并发面试》前十章。</p>
+<p>正版网址：<a href="https://coding.imooc.com/class/195.html" target="_blank" rel="noopener">https://coding.imooc.com/class/195.html</a></p>
+<p>百度网盘链接（提取码usv3）：<br><a href="https://pan.baidu.com/s/1XV_wtJyThVLEW1Qvk-a4uA" target="_blank" rel="noopener">https://pan.baidu.com/s/1XV_wtJyThVLEW1Qvk-a4uA</a></p>
+<p>###（二）设计模式<br><strong>设计模式</strong>可以跟着上课的步骤来，老师讲得水没关系，可以选择看博客。书的话是必看的，本人看的是上课的教材《软件结构设计体系》，但不推荐这本书，因为里面有许多错误的地方。</p>
+<p>面试中常被问到的设计模式包括<strong>单例模式、几个工厂模式、代理模式</strong>，在回答中最好结合Java类库（即上文提到的Java集合源码）的实现，或者Spring等框架的实现。</p>
+<p>###（三）框架与中间件<br>框架主要是<strong>Spring框架</strong>，重点复习<strong>IOC和AOP原理</strong>。</p>
+<p>中间件重点是<strong>缓存和消息队列</strong>。缓存中间件复习<strong>Redis</strong> ，主要看视频；消息队列可以看看<strong>《RabbitMQ 实战指南》</strong></p>
+<p>###（四）数据库<br>数据库也可以跟着课本的内容来，但是每次实验都要认真对待。后期进阶可以听音频：<strong>《MySql实战45讲》</strong></p>
+<p>百度网盘链接（提取码xgef）：<br><a href="https://pan.baidu.com/s/1gqKulNIc5I4kQk7tj1eYFQ" target="_blank" rel="noopener">https://pan.baidu.com/s/1gqKulNIc5I4kQk7tj1eYFQ </a></p>
+<p>也可以上Leetcode刷几道题目练习一下。看课本的时候重点理解<strong>关系型数据库管理系统、事务、范式</strong>等概念。</p>
+<p>重点复习<strong>InnoDB存储引擎、索引、锁、事务、性能优化</strong>等内容。</p>
+<p>###（五）数据结构与算法</p>
+<hr>
+<p><strong>分割线以示重要性！</strong></p>
+<p>算法跟着《算法分析与设计》这门课开始学习，<strong>刷oj</strong>。</p>
+<p><strong>一定要刷Leetcode</strong> ，不懂的看题解（上github上面可以找，这个姿势有待解锁）</p>
+<p>Java题解网址：<a href="https://github.com/qiyuangong/leetcode" target="_blank" rel="noopener">https://github.com/qiyuangong/leetcode</a></p>
+<p>数据结构通过上文提到的<strong>Java集合源码了解</strong>，也可以通过看公众号或者知乎专栏来了解。公众号有几个还不错：码农翻身、苦逼的帅地等。</p>
+<p>###（六）计算机网络<br>计网主要也是看课本，课本知识一定不能丢。重点复习网际层IP、运输层TCP/UDP。需要找高频复习题复习。</p>
+<p>###（七）计算机操作系统<br>这部分针对面试题来复习，因为理论知识已经系统学过了。目前的话是复习高频出现的知识，例如线程间通信、多线程调度方式等。</p>
+<p>对于linux系统的话，则需要了解一些常用的基本命令。</p>
+<p>###（八）系统设计<br>主要复习网站设计架构方面内容，推荐《大型网站架构》这本书。</p>
+<p>之后可复习分布式知识，了解分布式的架构及理论（是否看框架待定）。推荐《从Paxos到Zookeeper》和《大规模分布式存储系统》。</p>
+<p>之后再看看微服务，推荐《微服务设计》。</p>
+]]></content>
+  </entry>
+  <entry>
+    <title>java并发编程</title>
+    <url>/2019/11/06/java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/</url>
+    <content><![CDATA[<p>##一、并发与高并发概念<br>###1. 并发<br>并发指同时拥有两个或多个线程。单核处理器时，多个线程将交替换入换出内存；多核处理器时，线程将被分配至不同处理器上。<br>###2. 高并发<br>高并发是互联网分布式系统架构中必须考虑的因素，通常指系统能够同时并行处理请求。</p><p>##二、CPU多级缓存<br>###1. 缓存一致性（MESI）<br>其中，M表示修改状态，E表示独享，S表示共享，I表示无效。</p><a id="more"></a>
+
+<p>缓存一致性协议的其中一个表现为，当CPU向内存写入数据时，如果发现操作的变量是共享变量，即在其他CPU中也存在该变量的副本，会发出信号通知其他CPU将该变量的缓存置为无效状态，因此当其他CPU需要读取这个变量时，发现自己缓存中缓存行是无效的，那么它就会从内存重新读取。java中的volatile就是该协议的实现，volatile的实现原理可参见volatile底层实现。</p>
+<p>##三、Java内存模型</p>
+<p>###1. JMM与JVM内存结构的区别<br>Java内存模型是一种模型规范，它的主要目的是解决多线程通过共享内存进行通信时，存在的本地内存不一致，以及编译器对代码指令重排序，导致的代码乱序执行等问题。</p>
+<p>因此JMM规定所有变量都存储在主内存中，每条线程都拥有自己的工作内存。线程操作变量时需要将变量值拷贝到自己的工作内存中，线程间变量值的传递需通过主内存完成。</p>
+<p>同时JMM定义了八种原子操作以及依托于这八种操作六种同步规则来规范化这个操作流程。</p>
+<p>###2. JMM八种原子操作</p>
+<ol>
+<li>lock(锁定)：作用于主内存的变量，把一个变量标记为一条线程独占状态</li>
+<li>unlock(解锁)：作用于主内存的变量，把一个处于锁定状态的变量释放出来，释放后的变量才可以被其他线程锁定</li>
+<li>read(读取)：作用于主内存的变量，把一个变量值从主内存传输到线程的工作内存中，以便随后的load动作使用</li>
+<li>load(载入)：作用于工作内存的变量，它把read操作从主内存中得到的变量值放入工作内存的变量副本中</li>
+<li>use(使用)：作用于工作内存的变量，把工作内存中的一个变量值传递给执行引擎</li>
+<li>assign(赋值)：作用于工作内存的变量，它把一个从执行引擎接收到的值赋给工作内存的变量</li>
+<li>store(存储)：作用于工作内存的变量，把工作内存中的一个变量的值传送到主内存中，以便随后的write的操作</li>
+<li>write(写入)：作用于工作内存的变量，它把store操作从工作内存中的一个变量的值传送到主内存的变量中</li>
+</ol>
+<p>###3. JMM同步规则</p>
+<ol>
+<li>不允许一个线程无原因地（没有发生过任何assign操作）把数据从工作内存同步会主内存中</li>
+<li>一个新的变量只能在主内存中诞生，不允许在工作内存中直接使用一个未被初始化（load或者assign）的变量。即就是对一个变量实施use和store操作之前，必须先自行assign和load操作。</li>
+<li><strong>一个变量在同一时刻只允许一条线程对其进行lock操作，但lock操作可以被同一线程重复执行多次，多次执行lock后，只有执行相同次数的unlock操作，变量才会被解锁。lock和unlock必须成对出现。</strong></li>
+<li><strong>如果对一个变量执行lock操作，将会清空工作内存中此变量的值，在执行引擎使用这个变量之前需要重新执行load或assign操作初始化变量的值。</strong></li>
+<li>如果一个变量事先没有被lock操作锁定，则不允许对它执行unlock操作；也不允许去unlock一个被其他线程锁定的变量。</li>
+<li>对一个变量执行unlock操作之前，必须先把此变量同步到主内存中（执行store和write操作）</li>
+</ol>
+<p>##四、线程安全<br>###1. 定义<br>线程安全指当多个线程访问某个类时，不管运行时环境采用何种调度方式或者这些进程将如何交替执行，并且在主调代码中不需要任何额外的 同步或者协同，这个类都能表现出正确的行为，那么称这个类是线程安全的。</p>
+<p>###2. 特性</p>
+<ul>
+<li>原子性： </li>
+<li>安全性：</li>
+<li>有序性：happens-before原则</li>
+</ul>
+<p>##五、J.U.C<br>###1. CAS<br>CAS是compare and swap的缩写，意为比较并交换。<br>CAS算法是通过调用JNI（Java本地调用，可运行其他语言）实现的，使得Java能够越过JVM直接调用硬件并发操作的原语。由于在硬件上直接进行原子性操作的效率远远高于加同步锁，<strong>因此J.U.C整个包是建立在CAS理论上的。</strong></p>
+<p>CAS 操作包含三个操作数 —— 内存位置（V）、预期原值（A）和新值(B)。如果内存位置的值与预期原值相匹配，那么处理器会自动将该位置值更新为新值。否则，处理器不做任何操作。</p>
+<p>通俗一点来说，就是当线程使用CAS操作变量时，会先确定当前变量的值（V），同时进行一个备份，备份的值称为预期值（A），接着便对变量进行操作，当操作完成需要更新变量新值（N）时，CAS操作会先判断变量当前值是否与备份值相同，若相同，则代表变量在线程操作这段期间没有被其他线程修改，若不相同，则代表已被修改。</p>
+<p>以AtomicInter类下的unsafe.compareAndSwapInt方法为例：</p>
+<pre><code>例子</code></pre><p>此时，线程不会被挂起，而是会再次发起尝试，直至线程的值与预期相同为止。若是竞争激烈的情况下，线程将陷入等待。</p>
+<p><strong>CAS的ABA问题</strong></p>
+<p>以上的情况满足大部分的场景需求，但有没有可能在线程操作变量的过程中，该变量由本来的A状态变为了B状态，而后又被改为了A状态呢？答案毋庸置疑。</p>
+<p>CAS的解决方法是每次修改都为加一个版本号，即使变量值相同，但是版本号不同也需要重新发起尝试。</p>
+<p>###2. Atomic包<br>####（1）AtomicXXX类</p>
+<ul>
+<li>AtomicLong</li>
+<li>AtomicReference：无锁对象引用</li>
+<li>AtomicReferenceFiledUpdate</li>
+<li>AtomicStampReference</li>
+<li>…..</li>
+</ul>
+<p>创建该包内对象类（如：AtomicInteger）后，<br>当调用类中方法（例：该类调用incrementAndGet，而incrementAndGet方法体调用unsafe.compareAndSwapInt）时，<br>是拿当前对象（工作内存）的值与底层(主内存)返回的值做对比（即compareAndSwapInt），<br>如果值一样才返回相加的结果。</p>
+<p>其中AtomicStampedReference用于解决ABA问题，AtomicStampedReference便是引入了版本号的AtomicReference。</p>
+<p>AtomicLong类与JDK1.8中的LongAdder类相似，各有优缺点。</p>
+<p>###3. 锁<br>####（1）synchronized<br>synchronized修饰代码块或是方法时，只对当前引用代码和方法的对象有效，而不干扰其他对象。</p>
+<p>修饰代码块如下：</p>
+<pre><code>sychronized{
+    for(int i = 0; i &lt;= 10; i++)
+    {
+        System.out.println(&quot;i&quot;);
+    }
+}</code></pre><p>修饰方法如下：</p>
+<pre><code>public sychronized void test(){}</code></pre><p>synchronized的底层实现:</p>
+<p>每一个Java对象都关联一个监视器对象Monitor，Monitor存在于Java对象的对象头Mark Word中，在《深入理解Java虚拟机》一书中，对Mark Word的解释如下：</p>
+<blockquote>
+<p>HotSpot虚拟机的对象头包括两部分信息，第一部分用于存储对象自身的运行时数据，如哈希码（HashCode）、GC分代年龄、锁状态标志、线程持有的锁、偏向线程ID、偏向时间戳等，这部分数据的长度在32位和64位的虚拟机（未开启压缩指针）中分别为32bit和64bit，官方称为“Mark Word”。</p>
+</blockquote>
+<p>当Mark Word的锁标识位为10时，对象头Mark Word指向的是重量级锁的指针，亦即Monitor对象的起始地址。在Java虚拟机（HotSpot）中，Monitor是由ObjectMonitor实现的，其主要数据结构如下（位于HotSpot虚拟机源码ObjectMonitor.hpp文件，C++实现的）。</p>
+<p>####（2）volatile<br>volatile用于线程间共享变量。当变量被volatile声明时，代表当它被一个线程修改，便可被其他线程所监听到。同时，其他线程会将自己工作缓存中该变量的值设为无效，等到要使用该变量时，再从主内存中读取最新的变量值。</p>
+<p>volatile的底层实现原理用到了汇编指令中的lock前缀指令，当程序编译后，被volatile修饰的变量前将增加一条lock指令，而lock指令执行相当于一个内存屏障，用于实现对内存操作的顺序限制。因此<strong>volatile的另一个作用是禁止JVM对指令进行重排序。</strong></p>
+<p>volatile使用的lock是处理器实现的汇编指令，比起synchronize依赖于软件层次的JVM来说代价更小</p>
+<p>###4. CountDownLatch</p>
+<p>##六、安全发布对象</p>
+<p>###1. 发布对象</p>
+<p>发布对象指使一个对象能够被当前范围之外的代码所使用</p>
+<p>对象逸出则是一种错误的发布。当一个对象还没有构造完成时，就使得它能被其他线程所见</p>
+<p>如果要在构造函数中创建线程，则应开启一个start方法或是用工厂模式。对象未完成构造之前不可以将其发布。</p>
+<p>###2. ThreadLocal</p>
+<p>在方法内部定义局部变量属于堆栈封闭，不涉及线程安全问题。</p>
+<p>###3. 线程不安全类及现场安全类</p>
+<ul>
+<li>StringBuilder和StringBuffer</li>
+<li>ArrayList和Vector、Stack</li>
+<li>HashMap和HashTable</li>
+<li>List、Set、Map和Collections.synchronizedXXX（分别对应List、Set、Map）</li>
+</ul>
+<br>
+<br>
+<br>
+<br>
+
+
+
+<hr>
+<p>##以下是遇到的未解决的问题</p>
+<ol>
+<li>countdownlatch的用法</li>
+<li>为什么要加semaphore信号量来限制并发执行</li>
+<li>ReentrantLock和synchronized的区别</li>
+<li>ThreadLocal的用法</li>
+<li></li>
+</ol>
+]]></content>
+  </entry>
+  <entry>
+    <title>git常用命令</title>
+    <url>/2019/10/10/git%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/</url>
+    <content><![CDATA[<p>查看项目历史版本</p><pre><code>git reflog</code></pre><p>根据序列号前进或回退版本</p><pre><code>git reset --hard [序列号]</code></pre><p>查看文件内容</p><pre><code>cat [文件名]</code></pre><p>查看分支情况</p><pre><code>git branch -v</code></pre><p>查看项目当前状态</p><pre><code>git status</code></pre><p>创建分支</p><pre><code>git branch [分支名]</code></pre><p>切换分支</p><pre><code>git checkout [分支名]</code></pre><p>添加到本地库</p><a id="more"></a>
+
+
+
+
+
+
+
+<pre><code>git add [文件名]</code></pre><p>提交到远程库</p>
+<pre><code>git commit -m &quot;修改描述&quot; [文件名]</code></pre><p>合并分支，先切换至待合并分支上，再merge合并分支对象</p>
+<pre><code>git checkout [待合并分支名]
+git merge [分支名]</code></pre><p>创建文件夹</p>
+<pre><code>mkdir [文件名]</code></pre><p>初始化仓库，进入文件夹后</p>
+<pre><code>git init</code></pre><p>查看git用户与邮箱</p>
+<pre><code>git config user.name 
+git config user.email</code></pre><p>配置公钥以后，与gitee添加联系</p>
+<pre><code>git remote add gitee git@gitee.com:xusuona/spaims.git</code></pre><p>git关联之后提交整体步骤</p>
+<pre><code>git add .
+git commit -m 提交介绍
+git push gitee master</code></pre><p>期间还可不间断地查看状态</p>
+<pre><code>git status</code></pre><p>若远程库中留有无关文件，但本地已提交，则在本地删除该已提交文件</p>
+<pre><code>git  rm -r --cached [文件名]</code></pre>]]></content>
+  </entry>
+  <entry>
+    <title>世界你好</title>
+    <url>/2019/09/19/%E4%B8%96%E7%95%8C%EF%BC%8C%E4%BD%A0%E5%A5%BD/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+</search>
