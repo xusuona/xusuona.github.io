@@ -55,17 +55,17 @@
   };
 </script>
 
-  <meta name="description" content="##一、并发与高并发概念###1. 并发并发指同时拥有两个或多个线程。单核处理器时，多个线程将交替换入换出内存；多核处理器时，线程将被分配至不同处理器上。###2. 高并发高并发是互联网分布式系统架构中必须考虑的因素，通常指系统能够同时并行处理请求。 ##二、CPU多级缓存###1. 缓存一致性（MESI）其中，M表示修改状态，E表示独享，S表示共享，I表示无效。 缓存一致性协议的其中一个表现为，">
+  <meta name="description" content="##一、并发与高并发概念###1. 并发并发指同时拥有两个或多个线程。单核处理器时，多个线程将交替换入换出内存；多核处理器时，线程将被分配至不同处理器上。###2. 高并发高并发是互联网分布式系统架构中必须考虑的因素，通常指系统能够同时并行处理请求。##二、CPU多级缓存###1. 缓存一致性（MESI）其中，M表示修改状态，E表示独享，S表示共享，I表示无效。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="java并发编程">
 <meta property="og:url" content="https://xusuona.github.io/2019/11/06/java并发编程/index.html">
 <meta property="og:site_name" content="许唢呐的个人江湖">
-<meta property="og:description" content="##一、并发与高并发概念###1. 并发并发指同时拥有两个或多个线程。单核处理器时，多个线程将交替换入换出内存；多核处理器时，线程将被分配至不同处理器上。###2. 高并发高并发是互联网分布式系统架构中必须考虑的因素，通常指系统能够同时并行处理请求。 ##二、CPU多级缓存###1. 缓存一致性（MESI）其中，M表示修改状态，E表示独享，S表示共享，I表示无效。 缓存一致性协议的其中一个表现为，">
+<meta property="og:description" content="##一、并发与高并发概念###1. 并发并发指同时拥有两个或多个线程。单核处理器时，多个线程将交替换入换出内存；多核处理器时，线程将被分配至不同处理器上。###2. 高并发高并发是互联网分布式系统架构中必须考虑的因素，通常指系统能够同时并行处理请求。##二、CPU多级缓存###1. 缓存一致性（MESI）其中，M表示修改状态，E表示独享，S表示共享，I表示无效。">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:updated_time" content="2020-01-28T10:29:17.627Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="java并发编程">
-<meta name="twitter:description" content="##一、并发与高并发概念###1. 并发并发指同时拥有两个或多个线程。单核处理器时，多个线程将交替换入换出内存；多核处理器时，线程将被分配至不同处理器上。###2. 高并发高并发是互联网分布式系统架构中必须考虑的因素，通常指系统能够同时并行处理请求。 ##二、CPU多级缓存###1. 缓存一致性（MESI）其中，M表示修改状态，E表示独享，S表示共享，I表示无效。 缓存一致性协议的其中一个表现为，">
+<meta name="twitter:description" content="##一、并发与高并发概念###1. 并发并发指同时拥有两个或多个线程。单核处理器时，多个线程将交替换入换出内存；多核处理器时，线程将被分配至不同处理器上。###2. 高并发高并发是互联网分布式系统架构中必须考虑的因素，通常指系统能够同时并行处理请求。##二、CPU多级缓存###1. 缓存一致性（MESI）其中，M表示修改状态，E表示独享，S表示共享，I表示无效。">
   <link rel="canonical" href="https://xusuona.github.io/2019/11/06/java并发编程/">
 
 
@@ -272,8 +272,8 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>##一、并发与高并发概念<br>###1. 并发<br>并发指同时拥有两个或多个线程。单核处理器时，多个线程将交替换入换出内存；多核处理器时，线程将被分配至不同处理器上。<br>###2. 高并发<br>高并发是互联网分布式系统架构中必须考虑的因素，通常指系统能够同时并行处理请求。</p>
-<p>##二、CPU多级缓存<br>###1. 缓存一致性（MESI）<br>其中，M表示修改状态，E表示独享，S表示共享，I表示无效。</p>
+        <p>##一、并发与高并发概念<br>###1. 并发<br>并发指同时拥有两个或多个线程。单核处理器时，多个线程将交替换入换出内存；多核处理器时，线程将被分配至不同处理器上。<br>###2. 高并发<br>高并发是互联网分布式系统架构中必须考虑的因素，通常指系统能够同时并行处理请求。</p><p>##二、CPU多级缓存<br>###1. 缓存一致性（MESI）<br>其中，M表示修改状态，E表示独享，S表示共享，I表示无效。</p><a id="more"></a>
+
 <p>缓存一致性协议的其中一个表现为，当CPU向内存写入数据时，如果发现操作的变量是共享变量，即在其他CPU中也存在该变量的副本，会发出信号通知其他CPU将该变量的缓存置为无效状态，因此当其他CPU需要读取这个变量时，发现自己缓存中缓存行是无效的，那么它就会从内存重新读取。java中的volatile就是该协议的实现，volatile的实现原理可参见volatile底层实现。</p>
 <p>##三、Java内存模型</p>
 <p>###1. JMM与JVM内存结构的区别<br>Java内存模型是一种模型规范，它的主要目的是解决多线程通过共享内存进行通信时，存在的本地内存不一致，以及编译器对代码指令重排序，导致的代码乱序执行等问题。</p>
@@ -468,6 +468,19 @@
         
           <span class="site-state-item-count">8</span>
           <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="xusuona.github.io/categories/">
+          
+        
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">分类</span>
         </a>
       </div>
     

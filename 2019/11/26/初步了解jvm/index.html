@@ -55,17 +55,17 @@
   };
 </script>
 
-  <meta name="description" content="最近开始阅读《深入理解Java虚拟机》这本经典，也算是正式开启了我的jvm之旅。但是在读的过程中，我发觉自己的阅读效率并不是很高，有许多诸如“java堆”、“native堆”之类的名词总是印象不深，在后面翻阅时常常需要往前面查找相关的知识点。因此，我决定持续更新这篇博客，既为了增加阅读这本书过程中的名词积累，也为了在以后阅读中能够快速而准确地了解到相关解释。  ###1. 程序计数器（线程私有）">
+  <meta name="description" content="最近开始阅读《深入理解Java虚拟机》这本经典，也算是正式开启了我的jvm之旅。但是在读的过程中，我发觉自己的阅读效率并不是很高，有许多诸如“java堆”、“native堆”之类的名词总是印象不深，在后面翻阅时常常需要往前面查找相关的知识点。因此，我决定持续更新这篇博客，既为了增加阅读这本书过程中的名词积累，也为了在以后阅读中能够快速而准确地了解到相关解释。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="初步了解jvm">
 <meta property="og:url" content="https://xusuona.github.io/2019/11/26/初步了解jvm/index.html">
 <meta property="og:site_name" content="许唢呐的个人江湖">
-<meta property="og:description" content="最近开始阅读《深入理解Java虚拟机》这本经典，也算是正式开启了我的jvm之旅。但是在读的过程中，我发觉自己的阅读效率并不是很高，有许多诸如“java堆”、“native堆”之类的名词总是印象不深，在后面翻阅时常常需要往前面查找相关的知识点。因此，我决定持续更新这篇博客，既为了增加阅读这本书过程中的名词积累，也为了在以后阅读中能够快速而准确地了解到相关解释。  ###1. 程序计数器（线程私有）">
+<meta property="og:description" content="最近开始阅读《深入理解Java虚拟机》这本经典，也算是正式开启了我的jvm之旅。但是在读的过程中，我发觉自己的阅读效率并不是很高，有许多诸如“java堆”、“native堆”之类的名词总是印象不深，在后面翻阅时常常需要往前面查找相关的知识点。因此，我决定持续更新这篇博客，既为了增加阅读这本书过程中的名词积累，也为了在以后阅读中能够快速而准确地了解到相关解释。">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:updated_time" content="2020-01-28T10:32:59.508Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="初步了解jvm">
-<meta name="twitter:description" content="最近开始阅读《深入理解Java虚拟机》这本经典，也算是正式开启了我的jvm之旅。但是在读的过程中，我发觉自己的阅读效率并不是很高，有许多诸如“java堆”、“native堆”之类的名词总是印象不深，在后面翻阅时常常需要往前面查找相关的知识点。因此，我决定持续更新这篇博客，既为了增加阅读这本书过程中的名词积累，也为了在以后阅读中能够快速而准确地了解到相关解释。  ###1. 程序计数器（线程私有）">
+<meta name="twitter:description" content="最近开始阅读《深入理解Java虚拟机》这本经典，也算是正式开启了我的jvm之旅。但是在读的过程中，我发觉自己的阅读效率并不是很高，有许多诸如“java堆”、“native堆”之类的名词总是印象不深，在后面翻阅时常常需要往前面查找相关的知识点。因此，我决定持续更新这篇博客，既为了增加阅读这本书过程中的名词积累，也为了在以后阅读中能够快速而准确地了解到相关解释。">
   <link rel="canonical" href="https://xusuona.github.io/2019/11/26/初步了解jvm/">
 
 
@@ -274,7 +274,7 @@
       
         <blockquote>
 <p>最近开始阅读《深入理解Java虚拟机》这本经典，也算是正式开启了我的jvm之旅。但是在读的过程中，我发觉自己的阅读效率并不是很高，有许多诸如“java堆”、“native堆”之类的名词总是印象不深，在后面翻阅时常常需要往前面查找相关的知识点。因此，我决定持续更新这篇博客，既为了增加阅读这本书过程中的名词积累，也为了在以后阅读中能够快速而准确地了解到相关解释。</p>
-</blockquote>
+</blockquote><a id="more"></a>
 <p>###1. 程序计数器（线程私有）<br>每条线程都有独立的程序计数器，故内存区域“线程私有”。当线程执行Java方法（即字节码时）,计数器值为字节码指令的内存地址；当执行Native方法时，计算器值为空。</p>
 <p>###2. Java堆（线程共享）</p>
 <p>Java堆（Java Heap）是Java虚拟机所管理的<strong>内存</strong>中最大的一块。它在虚拟机启动时即被创建，被所有线程共享。</p>
@@ -379,6 +379,19 @@
         
           <span class="site-state-item-count">8</span>
           <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="xusuona.github.io/categories/">
+          
+        
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">分类</span>
         </a>
       </div>
     

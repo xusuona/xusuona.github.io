@@ -55,17 +55,17 @@
   };
 </script>
 
-  <meta name="description" content="一、事务 1.事务的四大特性 （1）原子性： 定义：一个事务要么全完成，要么全不完成，若事务执行过程中发现错误，事务便将回滚。 原理：（首先，myisam不支持事务回滚）而InnoDB引擎则依靠undo日志实现，一个事务进行时，所执行的sql语句会在undo日志中记载，当事务执行失败，需要回滚时，就将执行与undo日志中相反的操作。 （2）一致性： 定义：事务在执行过程中数据库的完整性约束没有被破">
+  <meta name="description" content="一、事务1.事务的四大特性（1）原子性：定义：一个事务要么全完成，要么全不完成，若事务执行过程中发现错误，事务便将回滚。原理：（首先，myisam不支持事务回滚）而InnoDB引擎则依靠undo日志实现，一个事务进行时，所执行的sql语句会在undo日志中记载，当事务执行失败，需要回滚时，就将执行与undo日志中相反的操作。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="java并发编程">
 <meta property="og:url" content="https://xusuona.github.io/2019/12/12/mysql知识点集锦/index.html">
 <meta property="og:site_name" content="许唢呐的个人江湖">
-<meta property="og:description" content="一、事务 1.事务的四大特性 （1）原子性： 定义：一个事务要么全完成，要么全不完成，若事务执行过程中发现错误，事务便将回滚。 原理：（首先，myisam不支持事务回滚）而InnoDB引擎则依靠undo日志实现，一个事务进行时，所执行的sql语句会在undo日志中记载，当事务执行失败，需要回滚时，就将执行与undo日志中相反的操作。 （2）一致性： 定义：事务在执行过程中数据库的完整性约束没有被破">
+<meta property="og:description" content="一、事务1.事务的四大特性（1）原子性：定义：一个事务要么全完成，要么全不完成，若事务执行过程中发现错误，事务便将回滚。原理：（首先，myisam不支持事务回滚）而InnoDB引擎则依靠undo日志实现，一个事务进行时，所执行的sql语句会在undo日志中记载，当事务执行失败，需要回滚时，就将执行与undo日志中相反的操作。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2020-01-28T10:32:59.507Z">
+<meta property="og:updated_time" content="2020-01-29T02:32:04.587Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="java并发编程">
-<meta name="twitter:description" content="一、事务 1.事务的四大特性 （1）原子性： 定义：一个事务要么全完成，要么全不完成，若事务执行过程中发现错误，事务便将回滚。 原理：（首先，myisam不支持事务回滚）而InnoDB引擎则依靠undo日志实现，一个事务进行时，所执行的sql语句会在undo日志中记载，当事务执行失败，需要回滚时，就将执行与undo日志中相反的操作。 （2）一致性： 定义：事务在执行过程中数据库的完整性约束没有被破">
+<meta name="twitter:description" content="一、事务1.事务的四大特性（1）原子性：定义：一个事务要么全完成，要么全不完成，若事务执行过程中发现错误，事务便将回滚。原理：（首先，myisam不支持事务回滚）而InnoDB引擎则依靠undo日志实现，一个事务进行时，所执行的sql语句会在undo日志中记载，当事务执行失败，需要回滚时，就将执行与undo日志中相反的操作。">
   <link rel="canonical" href="https://xusuona.github.io/2019/12/12/mysql知识点集锦/">
 
 
@@ -256,9 +256,22 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-01-28 18:32:59" itemprop="dateModified" datetime="2020-01-28T18:32:59+08:00">2020-01-28</time>
+                <time title="修改时间：2020-01-29 10:32:04" itemprop="dateModified" datetime="2020-01-29T10:32:04+08:00">2020-01-29</time>
               </span>
             
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="xusuona.github.io/categories/MySQL/" itemprop="url" rel="index"><span itemprop="name">MySQL</span></a></span>
+
+                
+                
+              
+            </span>
           
 
           
@@ -272,11 +285,11 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>一、事务</p>
-<p>1.事务的四大特性</p>
-<p>（1）原子性：</p>
-<p>定义：一个事务要么全完成，要么全不完成，若事务执行过程中发现错误，事务便将回滚。</p>
-<p>原理：（首先，myisam不支持事务回滚）而InnoDB引擎则依靠undo日志实现，一个事务进行时，所执行的sql语句会在undo日志中记载，当事务执行失败，需要回滚时，就将执行与undo日志中相反的操作。</p>
+        <p>一、事务</p><p>1.事务的四大特性</p><p>（1）原子性：</p><p>定义：一个事务要么全完成，要么全不完成，若事务执行过程中发现错误，事务便将回滚。</p><p>原理：（首先，myisam不支持事务回滚）而InnoDB引擎则依靠undo日志实现，一个事务进行时，所执行的sql语句会在undo日志中记载，当事务执行失败，需要回滚时，就将执行与undo日志中相反的操作。</p><a id="more"></a>
+
+
+
+
 <p>（2）一致性：</p>
 <p>定义：事务在执行过程中数据库的完整性约束没有被破坏，以及数据状态都是合法的。</p>
 <p>原理：这里的合法举个小例子，例如甲转一笔钱给乙，则从甲这边扣除的钱款需要等于在乙那边增加的钱款。因此，这不仅仅要求在数据库上面保持一致，在应用层也要有所约束才行。</p>
@@ -397,6 +410,19 @@
         
           <span class="site-state-item-count">8</span>
           <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="xusuona.github.io/categories/">
+          
+        
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">分类</span>
         </a>
       </div>
     

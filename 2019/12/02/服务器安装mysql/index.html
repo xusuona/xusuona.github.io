@@ -55,17 +55,17 @@
   };
 </script>
 
-  <meta name="description" content="首先查看是否已安装mysql rpm -qa|grep -i mysql则先停止mysqld服务 systemctl stop mysqld.service接着查看mysql安装目录 rpm -qa |grep -i mysql按照罗列的目录卸载相应文件 yum remove mysql-community mysql-community-server mysql-community-libs m">
+  <meta name="description" content="首先查看是否已安装mysqlrpm -qa|grep -i mysql则先停止mysqld服务systemctl stop mysqld.service接着查看mysql安装目录rpm -qa |grep -i mysql按照罗列的目录卸载相应文件yum remove mysql-community mysql-community-server mysql-community-libs mysql">
 <meta property="og:type" content="article">
 <meta property="og:title" content="测试博客按例">
 <meta property="og:url" content="https://xusuona.github.io/2019/12/02/服务器安装mysql/index.html">
 <meta property="og:site_name" content="许唢呐的个人江湖">
-<meta property="og:description" content="首先查看是否已安装mysql rpm -qa|grep -i mysql则先停止mysqld服务 systemctl stop mysqld.service接着查看mysql安装目录 rpm -qa |grep -i mysql按照罗列的目录卸载相应文件 yum remove mysql-community mysql-community-server mysql-community-libs m">
+<meta property="og:description" content="首先查看是否已安装mysqlrpm -qa|grep -i mysql则先停止mysqld服务systemctl stop mysqld.service接着查看mysql安装目录rpm -qa |grep -i mysql按照罗列的目录卸载相应文件yum remove mysql-community mysql-community-server mysql-community-libs mysql">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2020-01-28T10:27:42.889Z">
+<meta property="og:updated_time" content="2020-01-29T02:31:38.029Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="测试博客按例">
-<meta name="twitter:description" content="首先查看是否已安装mysql rpm -qa|grep -i mysql则先停止mysqld服务 systemctl stop mysqld.service接着查看mysql安装目录 rpm -qa |grep -i mysql按照罗列的目录卸载相应文件 yum remove mysql-community mysql-community-server mysql-community-libs m">
+<meta name="twitter:description" content="首先查看是否已安装mysqlrpm -qa|grep -i mysql则先停止mysqld服务systemctl stop mysqld.service接着查看mysql安装目录rpm -qa |grep -i mysql按照罗列的目录卸载相应文件yum remove mysql-community mysql-community-server mysql-community-libs mysql">
   <link rel="canonical" href="https://xusuona.github.io/2019/12/02/服务器安装mysql/">
 
 
@@ -256,9 +256,22 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-01-28 18:27:42" itemprop="dateModified" datetime="2020-01-28T18:27:42+08:00">2020-01-28</time>
+                <time title="修改时间：2020-01-29 10:31:38" itemprop="dateModified" datetime="2020-01-29T10:31:38+08:00">2020-01-29</time>
               </span>
             
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="xusuona.github.io/categories/MySQL/" itemprop="url" rel="index"><span itemprop="name">MySQL</span></a></span>
+
+                
+                
+              
+            </span>
           
 
           
@@ -272,11 +285,11 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>首先查看是否已安装mysql</p>
-<pre><code>rpm -qa|grep -i mysql</code></pre><p>则先停止mysqld服务</p>
-<pre><code>systemctl stop mysqld.service</code></pre><p>接着查看mysql安装目录</p>
-<pre><code>rpm -qa |grep -i mysql</code></pre><p>按照罗列的目录卸载相应文件</p>
-<pre><code>yum remove mysql-community mysql-community-server mysql-community-libs mysql-community-common mysql-community-release</code></pre><p>检查是否卸载完成，若无文件显示则显示成功，若有则重新卸载，注意文件名</p>
+        <p>首先查看是否已安装mysql</p><pre><code>rpm -qa|grep -i mysql</code></pre><p>则先停止mysqld服务</p><pre><code>systemctl stop mysqld.service</code></pre><p>接着查看mysql安装目录</p><pre><code>rpm -qa |grep -i mysql</code></pre><p>按照罗列的目录卸载相应文件</p><pre><code>yum remove mysql-community mysql-community-server mysql-community-libs mysql-community-common mysql-community-release</code></pre><a id="more"></a>
+
+
+
+<p>检查是否卸载完成，若无文件显示则显示成功，若有则重新卸载，注意文件名</p>
 <pre><code>rpm -qa |grep -i mysql</code></pre><p>清理mysqk残余文件</p>
 <pre><code>find / -name mysql.</code></pre><p>删除所显示的文件名</p>
 <pre><code>rm -rf /usr/share/mysql</code></pre><p>至此，mysql卸载完毕。可按照如下步骤进行安装</p>
@@ -410,6 +423,19 @@ SET PASSWORD FOR &apos;root&apos;@&apos;localhost&apos; = PASSWORD(&apos;newpwd&
         
           <span class="site-state-item-count">8</span>
           <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="xusuona.github.io/categories/">
+          
+        
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">分类</span>
         </a>
       </div>
     
