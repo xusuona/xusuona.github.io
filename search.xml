@@ -46,7 +46,7 @@
       </tags>
   </entry>
   <entry>
-    <title>测试博客按例</title>
+    <title>服务器安装MySQL</title>
     <url>/2019/12/02/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%89%E8%A3%85mysql/</url>
     <content><![CDATA[<p>首先查看是否已安装mysql</p><pre><code>rpm -qa|grep -i mysql</code></pre><p>则先停止mysqld服务</p><pre><code>systemctl stop mysqld.service</code></pre><p>接着查看mysql安装目录</p><pre><code>rpm -qa |grep -i mysql</code></pre><p>按照罗列的目录卸载相应文件</p><pre><code>yum remove mysql-community mysql-community-server mysql-community-libs mysql-community-common mysql-community-release</code></pre><a id="more"></a>
 
