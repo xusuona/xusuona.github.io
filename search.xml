@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>java并发编程</title>
+    <title>mysql知识点集锦</title>
     <url>/2019/12/12/mysql%E7%9F%A5%E8%AF%86%E7%82%B9%E9%9B%86%E9%94%A6/</url>
     <content><![CDATA[<p>一、事务</p><p>1.事务的四大特性</p><p>（1）原子性：</p><p>定义：一个事务要么全完成，要么全不完成，若事务执行过程中发现错误，事务便将回滚。</p><p>原理：（首先，myisam不支持事务回滚）而InnoDB引擎则依靠undo日志实现，一个事务进行时，所执行的sql语句会在undo日志中记载，当事务执行失败，需要回滚时，就将执行与undo日志中相反的操作。</p><a id="more"></a>
 
@@ -41,6 +41,9 @@
       <categories>
         <category>MySQL</category>
       </categories>
+      <tags>
+        <tag>MySQL</tag>
+      </tags>
   </entry>
   <entry>
     <title>测试博客按例</title>
@@ -92,6 +95,9 @@ SET PASSWORD FOR &apos;root&apos;@&apos;localhost&apos; = PASSWORD(&apos;newpwd&
       <categories>
         <category>MySQL</category>
       </categories>
+      <tags>
+        <tag>MySQL</tag>
+      </tags>
   </entry>
   <entry>
     <title>初步了解jvm</title>
@@ -109,6 +115,9 @@ SET PASSWORD FOR &apos;root&apos;@&apos;localhost&apos; = PASSWORD(&apos;newpwd&
 <p>###5. 方法区（线程共享）<br>方法区用于存储已被虚拟机加载的类信息，存储已被虚拟机加载的类信息、常量、静态变量和即时编译器编译后的代码等数据。</p>
 <p>###6. 运行时常量池（位于方法区）<br>编译期生成的各种字面常量和符号引用将在类被加载后进入运行时常量池存放。</p>
 ]]></content>
+      <tags>
+        <tag>JVM</tag>
+      </tags>
   </entry>
   <entry>
     <title>mysql语句</title>
@@ -262,6 +271,9 @@ flush privileges;</code></pre>]]></content>
 <li></li>
 </ol>
 ]]></content>
+      <tags>
+        <tag>并发</tag>
+      </tags>
   </entry>
   <entry>
     <title>git常用命令</title>
@@ -288,6 +300,9 @@ git commit -m 提交介绍
 git push gitee master</code></pre><p>期间还可不间断地查看状态</p>
 <pre><code>git status</code></pre><p>若远程库中留有无关文件，但本地已提交，则在本地删除该已提交文件</p>
 <pre><code>git  rm -r --cached [文件名]</code></pre>]]></content>
+      <tags>
+        <tag>Git</tag>
+      </tags>
   </entry>
   <entry>
     <title>世界你好</title>
